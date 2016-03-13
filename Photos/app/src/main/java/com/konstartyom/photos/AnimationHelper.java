@@ -5,6 +5,7 @@ import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.animation.ArgbEvaluator;
 import android.animation.ObjectAnimator;
+import android.app.Activity;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.util.Log;
@@ -36,7 +37,7 @@ public class AnimationHelper {
     float mStartScale;
     int mBgColor;
 
-    public void setParams(Rect fromRect, ImageView toView, View background, int bgColor){
+    private void setParams(Rect fromRect, ImageView toView, View background, int bgColor){
         mStartBounds = fromRect;
         mToView = toView;
         mBackgroundView = background;
@@ -119,10 +120,14 @@ public class AnimationHelper {
         mStartBounds.bottom += deltaHeight;
     }
 
-    public void animateTo() {
+    public void animateTo(final Activity activity, Rect fromRect, ImageView toView,
+                          View background, int bgColor) {
         if (mCurrentAnimator != null) {
-            mCurrentAnimator.cancel();
+            // workaround issue with double click
+            activity.finish();
+            return;
         }
+        setParams(fromRect, toView, background, bgColor);
         calculateCoordinates();
         mToView.setVisibility(View.VISIBLE);
 
@@ -151,6 +156,7 @@ public class AnimationHelper {
                 .with(alphaAnim);
         set.setDuration(ANIM_TIME);
         set.setInterpolator(new DecelerateInterpolator());
+
         set.addListener(new AnimatorListenerAdapter() {
             @Override
             public void onAnimationEnd(Animator animation) {
@@ -171,7 +177,6 @@ public class AnimationHelper {
             mCurrentAnimator.cancel();
         }
         final float startScaleFinal = mStartScale;
-
         ObjectAnimator alphaAnim =
                 ObjectAnimator.ofInt(mBackgroundView, "backgroundColor", mBgColor, 0x00000000);
         alphaAnim.setEvaluator(new ArgbEvaluator());

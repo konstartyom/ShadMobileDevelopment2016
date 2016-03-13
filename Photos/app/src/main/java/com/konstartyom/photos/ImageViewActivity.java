@@ -29,6 +29,7 @@ public class ImageViewActivity extends AppCompatActivity {
         image.setImageBitmap(ImageLoader.decodeBitmapFromName(file, 1000, 1000));
         final Rect fromRect = b.getParcelable("fromrect");
         final View parentL = findViewById(R.id.largeImageContainer);
+        final AppCompatActivity me = this;
         parentL.getViewTreeObserver()
                 .addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
@@ -37,9 +38,9 @@ public class ImageViewActivity extends AppCompatActivity {
                 image.getGlobalVisibleRect(r);
                 if (!r.isEmpty()) {
                     getResources().getColor(R.color.colorLargeImageBG);
-                    animHelper.setParams(fromRect, image, findViewById(R.id.largeImageContainer),
+                    animHelper.animateTo(me, fromRect, image,
+                            findViewById(R.id.largeImageContainer),
                             getResources().getColor(R.color.colorLargeImageBG));
-                    animHelper.animateTo();
                     parentL.getViewTreeObserver().removeGlobalOnLayoutListener(this);
                 }
             }
@@ -67,6 +68,7 @@ public class ImageViewActivity extends AppCompatActivity {
 
     private void animatedFinish(){
         final AppCompatActivity me = this;
+        ((ImageViewTouch) findViewById(R.id.largeImageView)).resetMatrix();
         animHelper.animateFrom(new Callable<Integer>(){
             @Override
             public Integer call(){
