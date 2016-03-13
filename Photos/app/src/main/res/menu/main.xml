@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group android:checkableBehavior="none"
+        android:id="@+id/menugroup_tabs">
+
+        <item
+            android:id="@+id/menu_goTo1"
+            android:checked="false"
+            android:icon="@drawable/ic_goto_dark"
+            android:title="@string/menu_goto1" />
+        <item
+            android:id="@+id/menu_goTo2"
+            android:checked="false"
+            android:icon="@drawable/ic_goto_dark"
+            android:title="@string/menu_goto2" />
+        <item
+            android:id="@+id/menu_goTo3"
+            android:checked="false"
+            android:icon="@drawable/ic_goto_dark"
+            android:title="@string/menu_goto3" />
+</group>
+    <group android:checkableBehavior="none"
+        android:id="@+id/menugroup_settings">
+        <item
+            android:id="@+id/menu_settings"
+            android:checked="false"
+            android:icon="@drawable/ic_settings_dark"
+            android:title="@string/menu_settings" />
+
+
+
+    </group>
+</menu>

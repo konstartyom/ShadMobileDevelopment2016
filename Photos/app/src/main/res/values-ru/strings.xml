@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Фото</string>
+    <string name="close_menu_drawer">Закрыть меню</string>
+    <string name="open_menu_drawer">Открыть меню</string>
+    <string name="pref_numberCol">Число колонок</string>
+    <string name="tab_word">Вкладка</string>
+    <string-array name="pref_themeNames">
+        <item>Светлая</item>
+        <item>Тёмная</item>
+    </string-array>
+    <string name="menu_goto1">Перейти к вкладке 1</string>
+    <string name="menu_goto2">Перейти к вкладке 2</string>
+    <string name="menu_goto3">Перейти к вкладке 3</string>
+    <string name="menu_settings">Настройки</string>
+    <string name="numcol_summary">%s фото в ряд</string>
+    <string name="pref_theme">Тема</string>
+    <string name="prefheader_appearance">Внешний вид</string>
+</resources>

@@ -1,0 +1,29 @@
+<resources>
+    <string name="app_name">Photos</string>
+    <string name="pref_numberCol">Number of columns</string>
+    <string name="tab_word">Tab</string>
+    <string name="menu_goto1">Go to tab 1</string>
+    <string name="menu_goto2">Go to tab 2</string>
+    <string name="menu_goto3">Go to tab 3</string>
+    <string name="menu_settings">Settings</string>
+    <string name="numcol_summary">%s photos in a row</string>
+    <string name="pref_theme">Theme</string>
+    <string name="prefheader_appearance">Appearance</string>
+    <string-array name="pref_numberColValues">
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+    </string-array>
+    <string-array name="pref_themeNames">
+        <item>Light</item>
+        <item>Dark</item>
+    </string-array>
+    <string-array name="pref_themeKeys">
+        <item>light</item>
+        <item>dark</item>
+    </string-array>
+    <string name="open_menu_drawer">Open menu</string>
+    <string name="close_menu_drawer">Close menu</string>
+</resources>
