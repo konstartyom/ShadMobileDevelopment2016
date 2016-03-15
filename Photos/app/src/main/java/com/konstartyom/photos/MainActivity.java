@@ -34,21 +34,21 @@ public class MainActivity extends AppCompatActivity
         pager.setAdapter(new TPAdapter(getSupportFragmentManager(),
                 getResources().getString(R.string.tab_word)));
         tabs.setupWithViewPager(pager);
-        ((NavigationView)findViewById(R.id.navigation_view))
+        ((NavigationView) findViewById(R.id.navigation_view))
                 .setNavigationItemSelectedListener(this);
         mTitle = mDrawerTitle = getTitle();
         initDrawerToggle();
 
     }
 
-    private void initDrawerToggle(){
+    private void initDrawerToggle() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerToggle = new ActionBarDrawerToggle(
-                this,                  /* host Activity */
-                drawer,         /* DrawerLayout object */
-                R.drawable.ic_open_menu_drawer,  /* nav drawer icon to replace 'Up' caret */
-                R.string.open_menu_drawer,  /* "open drawer" description */
-                R.string.close_menu_drawer  /* "close drawer" description */
+                this,
+                drawer,
+                R.drawable.ic_open_menu_drawer,
+                R.string.open_menu_drawer,
+                R.string.close_menu_drawer
         ) {
 
             /** Called when a drawer has settled in a completely closed state. */
@@ -79,9 +79,9 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    protected void onResume(){
+    protected void onResume() {
         super.onResume();
-        if(!mCurrentTheme.equals(ThemeLoader.getTheme(this))){
+        if (!mCurrentTheme.equals(ThemeLoader.getTheme(this))) {
             finish();
             startActivity(new Intent(this, this.getClass()));
         }
@@ -95,34 +95,22 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Pass the event to ActionBarDrawerToggle, if it returns
-        // true, then it has handled the app icon touch event
         if (mDrawerToggle.onOptionsItemSelected(item)) {
             return true;
         }
-        // Handle your other action bar items...
-
         return super.onOptionsItemSelected(item);
     }
 
     @Override
     public boolean onNavigationItemSelected(MenuItem menuItem) {
 
-
-            //Checking if the item is in checked state or not, if not make it in checked state
-        if(menuItem.isChecked()) menuItem.setChecked(false);
+        if (menuItem.isChecked()) menuItem.setChecked(false);
         else menuItem.setChecked(true);
 
-            //Closing drawer on item click
-        ((DrawerLayout)findViewById(R.id.drawer_layout)).closeDrawers();
-            //drawerLayout.closeDrawers();
+        ((DrawerLayout) findViewById(R.id.drawer_layout)).closeDrawers();
 
-            //Check to see which item was being clicked and perform appropriate action
         menuItem.setChecked(false);
-        switch (menuItem.getItemId()){
-
-
-                //Replacing the main content with ContentFragment Which is our Inbox View;
+        switch (menuItem.getItemId()) {
             case R.id.menu_settings:
                 Intent settingsIntent = new Intent(this, Prefs.class);
                 settingsIntent.putExtra(PreferenceActivity.EXTRA_SHOW_FRAGMENT,
@@ -132,7 +120,8 @@ public class MainActivity extends AppCompatActivity
                 return true;
 
             case R.id.menu_goTo1:
-                ((TabLayout) findViewById(R.id.tabs)).getTabAt(0).select();;
+                ((TabLayout) findViewById(R.id.tabs)).getTabAt(0).select();
+                ;
                 return true;
             case R.id.menu_goTo2:
                 ((TabLayout) findViewById(R.id.tabs)).getTabAt(1).select();
@@ -142,9 +131,6 @@ public class MainActivity extends AppCompatActivity
                 return true;
             default:
                 return true;
-
-
-
         }
     }
 

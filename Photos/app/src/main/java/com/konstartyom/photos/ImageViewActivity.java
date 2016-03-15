@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.ViewTreeObserver;
-import android.widget.ImageView;
 
 import java.util.concurrent.Callable;
 
@@ -37,9 +36,7 @@ public class ImageViewActivity extends AppCompatActivity {
                 Rect r = new Rect();
                 image.getGlobalVisibleRect(r);
                 if (!r.isEmpty()) {
-                    getResources().getColor(R.color.colorLargeImageBG);
-                    animHelper.animateTo(me, fromRect, image,
-                            findViewById(R.id.largeImageContainer),
+                    animHelper.animateTo(me, fromRect, image, parentL,
                             getResources().getColor(R.color.colorLargeImageBG));
                     parentL.getViewTreeObserver().removeGlobalOnLayoutListener(this);
                 }

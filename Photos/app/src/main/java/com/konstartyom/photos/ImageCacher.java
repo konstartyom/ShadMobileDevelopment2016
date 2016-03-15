@@ -3,9 +3,6 @@ package com.konstartyom.photos;
 import android.graphics.Bitmap;
 import android.support.v4.util.LruCache;
 
-/**
- * Created by anastasia on 12.3.16.
- */
 public class ImageCacher {
     private static LruCache<String, Bitmap> sBitmapCache;
 
@@ -32,6 +29,8 @@ public class ImageCacher {
                     // number of items.
                     return bitmap.getByteCount() / 1024;
                 }
+
+
             };
         }
     }
