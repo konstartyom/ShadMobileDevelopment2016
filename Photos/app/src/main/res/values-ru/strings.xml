@@ -9,8 +9,8 @@
         <item>Светлая</item>
         <item>Тёмная</item>
     </string-array>
-    <string name="menu_goto1">Перейти к вкладке 1</string>
-    <string name="menu_goto2">Перейти к вкладке 2</string>
+    <string name="menu_goto1">Галерея</string>
+    <string name="menu_goto2">ЯФотки</string>
     <string name="menu_goto3">Перейти к вкладке 3</string>
     <string name="menu_settings">Настройки</string>
     <string name="numcol_summary">%s фото в ряд</string>

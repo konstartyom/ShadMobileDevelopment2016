@@ -22,7 +22,8 @@ public class Prefs extends PreferenceActivity{
 
     @Override
     protected boolean isValidFragment(String fragmentName) {
-        return Prefs1Fragment.class.getName().equals(fragmentName);
+        return Prefs1Fragment.class.getName().equals(fragmentName) ||
+                PrefsCacheFragment.class.getName().equals(fragmentName);
     }
 
     public static class Prefs1Fragment extends PreferenceFragment {
@@ -34,6 +35,18 @@ public class Prefs extends PreferenceActivity{
                     R.xml.preferences, false);
 
             addPreferencesFromResource(R.xml.preferences);
+        }
+    }
+
+    public static class PrefsCacheFragment extends PreferenceFragment {
+        @Override
+        public void onCreate(Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+
+            PreferenceManager.setDefaultValues(getActivity(),
+                    R.xml.preferences_cache, false);
+
+            addPreferencesFromResource(R.xml.preferences_cache);
         }
     }
 

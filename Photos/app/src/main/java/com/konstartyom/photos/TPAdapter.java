@@ -3,19 +3,19 @@ package com.konstartyom.photos;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentStatePagerAdapter;
 
 public class TPAdapter extends FragmentPagerAdapter {
-    Tab1[] mTabs;
-    private static final int TABS_COUNT = 3;
-    private static String mTabPrefix;
+    TabBase[] mTabs;
+    private static final int TABS_COUNT = 2;
+    private FragmentManager mFragmentManager;
 
-    public TPAdapter(FragmentManager fm, String tabPrefix) {
+    public TPAdapter(FragmentManager fm) {
         super(fm);
-        mTabs = new Tab1[TABS_COUNT];
-        for (int index = 0; index < mTabs.length; ++index) {
-            mTabs[index] = new Tab1();
-        }
-        mTabPrefix = tabPrefix + " ";
+        mTabs = new TabBase[TABS_COUNT];
+        mTabs[0] = new Tab1();
+        mTabs[1] = new Tab2();
+        mFragmentManager = fm;
     }
 
     @Override
@@ -30,7 +30,15 @@ public class TPAdapter extends FragmentPagerAdapter {
 
     @Override
     public CharSequence getPageTitle(int position) {
-        return mTabPrefix + (position + 1);
+        switch (position){
+            case 0:
+                return GlobalContext.getApplicationContext()
+                        .getResources().getString(R.string.menu_goto1);
+            case 1:
+                return GlobalContext.getApplicationContext()
+                        .getResources().getString(R.string.menu_goto2);
+        }
+        return "Unknown";
     }
 
 }

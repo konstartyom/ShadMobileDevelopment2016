@@ -2,8 +2,10 @@ package com.konstartyom.photos;
 
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceActivity;
+import android.preference.PreferenceManager;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.ActionBarDrawerToggle;
@@ -27,19 +29,23 @@ public class MainActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         mCurrentTheme = ThemeLoader.loadAppropriateTheme(this, ThemeLoader.MAIN_THEME);
         super.onCreate(savedInstanceState);
-        ImageCacher.init();
         setContentView(R.layout.activity_main);
+        GlobalContext.init(this);
+        if(PreferenceManager.getDefaultSharedPreferences(this)
+                .getBoolean("pref_clearcache", false)){
+            GlobalContext.getImageCacher().clearDiskCache();
+        }
         TabLayout tabs = (TabLayout) findViewById(R.id.tabs);
-        ViewPager pager = (ViewPager) findViewById(R.id.pager);
-        pager.setAdapter(new TPAdapter(getSupportFragmentManager(),
-                getResources().getString(R.string.tab_word)));
+        final ViewPager pager = (ViewPager) findViewById(R.id.pager);
+        pager.setAdapter(new TPAdapter(getSupportFragmentManager()));
+        pager.setOffscreenPageLimit(3);
         tabs.setupWithViewPager(pager);
         ((NavigationView) findViewById(R.id.navigation_view))
                 .setNavigationItemSelectedListener(this);
         mTitle = mDrawerTitle = getTitle();
         initDrawerToggle();
-
     }
+
 
     private void initDrawerToggle() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -113,8 +119,8 @@ public class MainActivity extends AppCompatActivity
         switch (menuItem.getItemId()) {
             case R.id.menu_settings:
                 Intent settingsIntent = new Intent(this, Prefs.class);
-                settingsIntent.putExtra(PreferenceActivity.EXTRA_SHOW_FRAGMENT,
-                        Prefs.Prefs1Fragment.class.getName());
+                //settingsIntent.putExtra(PreferenceActivity.EXTRA_SHOW_FRAGMENT,
+                //        Prefs.Prefs1Fragment.class.getName());
                 //settingsIntent.putExtra(PreferenceActivity.EXTRA_NO_HEADERS, true);
                 startActivity(settingsIntent);
                 return true;
@@ -126,12 +132,8 @@ public class MainActivity extends AppCompatActivity
             case R.id.menu_goTo2:
                 ((TabLayout) findViewById(R.id.tabs)).getTabAt(1).select();
                 return true;
-            case R.id.menu_goTo3:
-                ((TabLayout) findViewById(R.id.tabs)).getTabAt(2).select();
-                return true;
             default:
                 return true;
         }
     }
-
 }

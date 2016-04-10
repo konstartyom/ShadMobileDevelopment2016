@@ -13,11 +13,6 @@
             android:checked="false"
             android:icon="@drawable/ic_goto_dark"
             android:title="@string/menu_goto2" />
-        <item
-            android:id="@+id/menu_goTo3"
-            android:checked="false"
-            android:icon="@drawable/ic_goto_dark"
-            android:title="@string/menu_goto3" />
 </group>
     <group android:checkableBehavior="none"
         android:id="@+id/menugroup_settings">

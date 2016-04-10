@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <CheckBoxPreference
+        android:key="pref_clearcache"
+        android:title="@string/pref_clearcache"
+        android:defaultValue="false" />
+    <EditTextPreference
+        android:key="pref_cacheSize"
+        android:title="@string/pref_cacheSize"
+        android:numeric="integer"
+        android:summary="%i MB"
+        android:defaultValue="100" />
+</PreferenceScreen>

@@ -6,4 +6,8 @@
         android:icon="@drawable/ic_appearance_dark"
         android:title="@string/prefheader_appearance" />
 
+    <header android:fragment="com.konstartyom.photos.Prefs$PrefsCacheFragment"
+        android:icon="@drawable/ic_appearance_dark"
+        android:title="@string/prefheader_cache" />
+
 </preference-headers>

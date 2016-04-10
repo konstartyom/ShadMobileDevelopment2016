@@ -100,6 +100,7 @@ public class AnimationHelper {
         setParams(fromRect, toView, background, bgColor);
         calculateCoordinates();
         mToView.setVisibility(View.VISIBLE);
+        mBackgroundView.setVisibility(View.VISIBLE);
 
         mToView.setPivotX(0f);
         mToView.setPivotY(0f);
@@ -165,6 +166,7 @@ public class AnimationHelper {
             public void onAnimationEnd(Animator animation) {
                 //mFromView.setAlpha(1f);
                 mToView.setVisibility(View.GONE);
+                mBackgroundView.setVisibility(View.GONE);
                 mCurrentAnimator = null;
                 try {
                     func.call();

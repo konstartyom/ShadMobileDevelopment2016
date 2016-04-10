@@ -15,6 +15,9 @@ import android.widget.ImageView;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadPoolExecutor;
 
 public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder> {
     private static final String TAG = "CustomAdapter";
@@ -27,18 +30,13 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
 
     @Override
     public long getItemId(int position) {
-        try {
-            return mData.get(position).mFile.getCanonicalPath().hashCode();
-        } catch (IOException _) {
-            return 0;
-        }
+            return mData.get(position).getDescriptor().getUniqueRepr().hashCode();
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         private static String TAG = "CustomAdapterHolder";
 
         private final ImageView imageView;
-        private int mPosition;
 
         public ViewHolder(View v, int width, final Activity activity,
                           final ArrayList<LazyImage> data) {
@@ -47,14 +45,13 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
                 @Override
                 public void onClick(View v) {
                     Intent i = new Intent(activity, ImageViewActivity.class);
-                    i.putExtra("filename", data.get(getPosition()).getImagePath());
+                    i.putExtra("filename", data.get(getPosition()).getDescriptor());
                     i.putExtra("fromrect", calcUnclippedRect(v));
                     i.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                     activity.startActivity(i);
                     Log.d(TAG, "Element " + getPosition() + " clicked.");
                 }
             });
-            mPosition = 0;
             imageView = (ImageView) v.findViewById(R.id.itemImageView);
             ViewGroup.LayoutParams params = imageView.getLayoutParams();
             params.height = width;
@@ -64,76 +61,79 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
         public ImageView getImageView() {
             return imageView;
         }
-
-        public int getRPosition() {
-            return mPosition;
-        }
-
-        public void setRPosition(int pos) {
-            mPosition = pos;
-        }
     }
+
+    public static Executor sExecutor = Executors.newFixedThreadPool(8);
 
     private class LazyImage {
 
-        private File mFile;
+        private ImageDescriptor mFile;
+        private boolean mBusy;
 
-        public LazyImage(File file) {
+        public LazyImage(ImageDescriptor file) {
             mFile = file;
+            mBusy = false;
         }
 
-        private String getFileName() {
-            try {
-                return (mFile.getCanonicalPath());
-            } catch (IOException _) {
-                return "";
-            }
+        public ImageDescriptor getDescriptor(){
+            return mFile;
         }
 
         public void decode(final ViewHolder holder, final int position) {
             final Integer imageSize = calcNeededImageSize(mBaseWidth);
-            final String fname = imageSize.toString() + getFileName();
-            Bitmap bmp = ImageCacher.getBitmapFromMemCache(fname);
+            final String fname = imageSize.toString() + mFile.getUniqueRepr();
+            Bitmap bmp = GlobalContext.getImageCacher().getBitmapFromMemCache(fname);
             if (bmp == null) {
                 holder.getImageView().setImageResource(R.drawable.stub);
-                final File f = mFile;
-                new AsyncTask<String, Integer, Bitmap>() {
-                    @Override
-                    protected Bitmap doInBackground(String... _) {
-                        return ImageLoader.decodeBitmap(f, imageSize, imageSize);
-                    }
-
-                    @Override
-                    protected void onPostExecute(Bitmap result) {
-                        ImageCacher.addBitmapToMemoryCache(fname, result);
-                        if (position == holder.getRPosition()) {
-                            holder.getImageView().setImageBitmap(result);
+                if(!mBusy) {
+                    mBusy = true;
+                    new AsyncTask<String, Integer, Bitmap>() {
+                        @Override
+                        protected Bitmap doInBackground(String... _) {
+                            Bitmap bmp = mFile.toBitmap(imageSize, imageSize);
+                            // handle null case here
+                            if(bmp == null){
+                                Log.d(TAG,"Something went wrong");
+                            }
+                            return bmp;
                         }
-                        super.onPostExecute(result);
-                    }
-                }.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, null);
+
+                        @Override
+                        protected void onPostExecute(Bitmap result) {
+                            GlobalContext.getImageCacher().addBitmapToMemoryCache(fname, result);
+                            if (position == holder.getAdapterPosition()){
+                                holder.getImageView().setImageBitmap(result);
+                            }
+                            else{
+                                notifyItemChanged(position);
+                            }
+                            mBusy = false;
+                            super.onPostExecute(result);
+                        }
+                    }.executeOnExecutor(sExecutor, null);
+                }
             } else {
                 holder.getImageView().setImageBitmap(bmp);
             }
         }
-
-        public String getImagePath() {
-            try {
-                return mFile.getCanonicalPath();
-            } catch (IOException _) {
-                return null;
-            }
-        }
     }
 
-    public CustomAdapter(ArrayList<File> dataSet, int baseWidth, Activity activity) {
+    public CustomAdapter(ArrayList<ImageDescriptor> dataSet, int baseWidth, Activity activity) {
         setHasStableIds(true);
         mData = new ArrayList<>();
-        for (File file : dataSet) {
+        for (ImageDescriptor file : dataSet) {
             mData.add(new LazyImage(file));
         }
         mBaseWidth = baseWidth;
         mParActivity = activity;
+    }
+
+    public void setData(ArrayList<ImageDescriptor> data){
+        mData.clear();
+        for (ImageDescriptor file : data) {
+            mData.add(new LazyImage(file));
+        }
+        notifyDataSetChanged();
     }
 
     @Override
@@ -147,7 +147,6 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
     @Override
     public void onBindViewHolder(ViewHolder viewHolder, final int position) {
         Log.d(TAG, "Element " + position + " set.");
-        viewHolder.setRPosition(position);
         mData.get(position).decode(viewHolder, position);
     }
 
@@ -175,13 +174,7 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
     }
 
     private static int calcNeededImageSize(int width) {
-        int max = width;
-        int count = 0;
-        while (max > 0) {
-            max >>>= 1;
-            ++count;
-        }
-        return Math.min(256, 1 << (count - 1));
+        return Math.min(256, Integer.highestOneBit(width));
     }
 
 }
